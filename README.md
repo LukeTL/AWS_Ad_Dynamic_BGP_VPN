@@ -1,1 +1,1 @@
-# AWS_Ad_Dynamic_BGP_VPN
+# AWS - Advanced Dynamic, BGP Based, Highly-Available VPN (AWS & Simulated On-premises)
