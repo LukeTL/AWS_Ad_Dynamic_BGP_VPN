@@ -14,4 +14,9 @@ The simulated On-premises environment consists of
 
 - 1 public subnet
 - 2 private subnets
-- The public subnet has 2 Ubuntu + strongSwan + FRRouting
+- 4 EC2 Instances
+- The public subnet has 2 Ubuntu + strongSwan + FRRouting endpoints
+
+## Setting up Environments
+
+
