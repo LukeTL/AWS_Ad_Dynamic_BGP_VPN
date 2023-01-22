@@ -186,6 +186,15 @@ The simulated On-premises environment consists of
 
 **Summary of AWS environment setup**
 
+1. I have created a VPC dedicated for AWS resources. I had set the IPv4 CIDR such that I reserved a usable host range of 10.16.0.1 - 10.16.15.254 for the VPC.
+2. I have a total of 2 private subnets dedicated for AWS resources called `sn-aws-private-A` and `sn-aws-private-B`. `sn-aws-private-A` was provisioned in us-east-1a zone while `sn-aws-private-B` was provisioned in us-east-1b zone, increasing the overall avalibility of the AWS resources in the us-east-1 region. I had reserved a usable host range of 10.16.32.1 - 10.16.47.254 for `sn-aws-private-A` and 10.16.96.1 - 10.16.111.254 for `sn-aws-private-B`.
+3. A custom route table for the AWS VPC was created under the name of `A4L-AWS-RT`.
+4. The transit gateway for the AWS resources was created. The ASN for this transit gateway was set to 64512 with DNS support, VPN ECMP support and Default route table association enabled. This will allow for my AWS VPC to interconnect with the On-premises Network (Simulated using a VPC). I then attached the transit gateway to the two private subnets (Availability Zones of us-east-1a & us-east-1b) in my AWS VPC. Lastly for traffic to flow via the transit gateway, I created a default route for the transit gateway under the custom route table `A4L-AWS-RT`.
+5. The AWS private subnets were then associated to the AWS route table. Any traffic targeted to any IP addresses in the range of 10.16.0.0/16 will be handled within the VPC, while traffic targeted outside of this range will be pushed to the Transit Gateway to be allocated outside.
+6. The AWS Security Group called `AWSInstanceSG` was created. It will be the default Security Group of the AWS VPC. There are 3 total inbound rules. The 1st allows for SSH IPv4 traffic at port 22, the 2nd allows all traffic from 192.168.8.0/21 which is allowing all traffic from the On-premises Network and the 3rd is a self reference rule which prevents traffic from sources which do not share the same security group as the VPC.
+7. A role was created for the setup of the EC2 Instances and VPC endpoints.
+8. 3 VPC Endpoints were then setup. The ssm endpoint is the endpoint for the System Manager Service, the ec2messages endpoint is used by Systems Manager to make calls from the SSM Agent to the Systems Manager service and the ssmmessages endpoint is required for connecting to the AWS instances through a secure data channel using Session Manager.
+9. Finally 2 EC2 Instances were created in the AWS VPC to simulate AWS resources. `AWS-EC2-A` ran in subnet `sn-aws-private-A` while `AWS-EC2-B` ran in subnet `sn-aws-private`.
 
 ## Setting up On-premises Environment
 
