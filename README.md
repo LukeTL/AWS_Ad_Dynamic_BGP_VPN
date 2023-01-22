@@ -21,6 +21,8 @@ The simulated On-premises environment consists of
 
 Creation of AWS VPC
 
+1. Go into the 'VPC' service in the AWS Managment Console
+
 Creation of AWS Private Subnet A & B
 
 Creation of AWS Custom Route Table
