@@ -43,21 +43,50 @@ The simulated On-premises environment consists of
 
 **Creation of AWS Custom Route Table**
 
+1. From `VPC` service, go into `Route tables` and select `Create Route Table`
+2. Set `Name` as `A4L-AWS-RT` and `VPC` as `A4L-AWS` 
 
+**Creation of AWS Transit Gateway & Attachment**
+
+1. From `VPC` service, go into `Transit gateways` and select `Create transit gateway`
+2. Set `ASN` as `64512` and ensure `DNS support`, `VPN ECMP support` and `Default route table association` are enabled
+3. Create transit gateway
+
+![image](https://user-images.githubusercontent.com/123274310/213909848-f2665964-be9c-470d-8978-ce50d6fc9c59.png)
+
+4. From `VPC` service, go into `Transit gateway attachmenets` and select `Create transit gateway attachment`
+5. Set `Name tag` as `A4LTGWATTACHMENT`, `Transit gateway ID` as `A4LTGW`, `VPC ID` as `A4L-AWS` and ensure `Subnet IDs` are set to `sn-aws-private-A` and `sn-aws-private-B`
+6. Create attachment
+
+![image](https://user-images.githubusercontent.com/123274310/213910188-6c4040c8-de86-4522-8e3a-712fe96acea5.png)
 
 **Creation of AWS Transit Default Route**
 
+1. From `VPC` service, go into `Route tables` and select `A4L-AWS-RT`
+2. Select `Edit routes` and press `Add route`
+3. Set `Destination` as `0.0.0.0/0` and `Target` as `Transit Gateway`
+4. `A4LTGATTACHMENT` should appear. Go and select it and create route
+
+![image](https://user-images.githubusercontent.com/123274310/213910585-39893b74-9fbd-46a2-8279-3dab8df5f94a.png)
+
 **Association of AWS Private Subnets into AWS Route Table**
+
+1. From `VPC` service, go into `Subnets` and select `sn-aws-private-A`
+2. Select `Route table` and press `Edit route table association`
+3. Set `Route table ID` as `A4L-AWS-RT` and select `Save`
+4. Now exit and select `sn-aws-private-B`, repeating steps 2 and 3
+
+![image](https://user-images.githubusercontent.com/123274310/213910820-e25fa13b-6a9c-4f8d-bd23-118423594d49.png)
 
 **Creation of AWS Instance Secruity Group**
 
-**Creation of AWS EC2 Resource Instances**
+
 
 **Creation of AWS EC2 Role & Setting up IAM Instance Profile**
 
 **Setting AWS VPC Endpoints**
 
-**Creation of AWS Transit Gateway & Attachment**
+**Creation of AWS EC2 Resource Instances**
 
 ## Setting up On-premises Environment
 
