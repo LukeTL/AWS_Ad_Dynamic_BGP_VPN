@@ -80,9 +80,82 @@ The simulated On-premises environment consists of
 
 **Creation of AWS Instance Secruity Group**
 
+1. From `VPC` service, go into `Security Groups` and select `Create security group`
+2. Set `Description` as `Default A4L AWS SG` and `VPC` to `A4L-AWS`
+3. Add the 1st Inbound Rule, Set `Type` as `Custom TCP`, `Port range` as `22` and `Source` as `0.0.0.0/0`. The description is set as `Allow SSH IPv4 IN`
+4. Add the 2nd Inbound Rule, Set `Type` as `All traffic` and `Source` as `192.168.8.0/21`. The desciption is set as `Allow All from ONPREM Networks`
+5. Create Security Group
+6. Edit Inbound rules and add a self reference rule. Set `Type` as `All Traffic` and Source as `AWSInstanceSG`
+7. Save rules
 
+![image](https://user-images.githubusercontent.com/123274310/213918823-d4c07938-1c03-499e-aede-298e0ada3d26.png)
 
 **Creation of AWS EC2 Role & Setting up IAM Instance Profile**
+
+1. From `IAM` service, go to `Roles` and select `Create role`
+2. Choose `AWS Service` and select the `EC2` service
+3. Choose `Create policy` and input this code
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+    {
+        "Effect":"Allow",
+        "Action":[
+            "ssm:DescribeAssociation",
+            "ssm:GetDeployablePatchSnapshotForInstance",
+            "ssm:GetDocument",
+            "ssm:DescribeDocument",
+            "ssm:GetManifest",
+            "ssm:GetParameter",
+            "ssm:GetParameters",
+            "ssm:ListAssociations",
+            "ssm:ListInstanceAssociations",
+            "ssm:PutInventory",
+            "ssm:PutComplianceItems",
+            "ssm:PutConfigurePackageResult",
+            "ssm:UpdateAssociationStatus",
+            "ssm:UpdateInstanceAssociationStatus",
+            "ssm:UpdateInstanceInformation"
+        ],
+        "Resource":"*"
+    },
+    {
+        "Effect":"Allow",
+        "Action":[
+            "ssmmessages:CreateControlChannel",
+            "ssmmessages:CreateDataChannel",
+            "ssmmessages:OpenControlChannel",
+            "ssmmessages:OpenDataChannel"
+        ],
+        "Resource":"*"
+    },
+    {
+        "Effect":"Allow",
+        "Action":[
+            "ec2messages:AcknowledgeMessage",
+            "ec2messages:DeleteMessage",
+            "ec2messages:FailMessage",
+            "ec2messages:GetEndpoint",
+            "ec2messages:GetMessages",
+            "ec2messages:SendReply"
+        ],
+        "Resource":"*"
+    },
+    {
+        "Effect":"Allow",
+        "Action":"s3:*",
+        "Resource":"*"
+    },
+    {
+        "Effect":"Allow",
+        "Action":"sns:*",
+        "Resource":"*"
+    }
+    ]
+}
+```
 
 **Setting AWS VPC Endpoints**
 
