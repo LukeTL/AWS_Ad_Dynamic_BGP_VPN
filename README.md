@@ -200,18 +200,100 @@ The simulated On-premises environment consists of
 
 **Creation of On-premises VPC**
 
+1. From `VPC` service, go to `Your VPCs` and select `Create VPC`
+2. Set `Name tag` as `ONPREM`, `IPv4 CIDR` as `192.168.8.0/21`
+3. Create VPC and toggle `Action` and select `Edit VPC settings`
+4. Tick `Enable DNS hostnames` and save
+
+![image](https://user-images.githubusercontent.com/123274310/213933598-b073e1a3-9542-4619-a757-50bdef453991.png)
+
 **Creation of On-premises Internet Gateway & Attachment**
+
+1. From `VPC` service, go to `Internet gateways` and select `Create Internet gateway`
+2. Set `Name tag` as `IGW-ONPREM` and create internet gateway
+3. Toggle `Actions` and select `Attach to VPC`
+4. Set `Available VPCs` as `ONPREM` and attach internet gateway
+
+![image](https://user-images.githubusercontent.com/123274310/213933772-65e351ff-f9fd-4d83-8cf0-caa065c7c55a.png)
 
 **Creation of On-premises Public Subnet**
 
+1. From `VPC` service, go to `Subnets` and select `Create subnet`
+2. Set `VPC ID` as ONPREM, `Subnet name` as `ONPREM-PUBLIC`, `Availability Zone` as `us-east-1a` and `IPv4 CIDR block` as '192.168.12.0/24'
+3. Create subnet and toggle `Actions` and select `Edit subnet settings`.
+4. Enable `Enable auto-assign public IPv4 address` and save
+
+![image](https://user-images.githubusercontent.com/123274310/213934108-724d632f-e7b6-4202-a00f-05d6de5d9bdf.png)
+
 **Creation of On-premises Private Subnet 1 & 2**
+
+1. From 'VPC' service, go to `Subnets` and select `Create subnet`
+2. Set `VPC ID` as ONPREM, `Subnet name` as `ONPREM-PRIVATE-1`, `Availability Zone` as `us-east-1a` and `IPv4 CIDR block` as '192.168.10.0/24'
+3. Create subnet and move on to create the 2nd private subnet
+4. Set `VPC ID` as ONPREM, `Subnet name` as `ONPREM-PRIVATE-2`, `Availability Zone` as `us-east-1a` and `IPv4 CIDR block` as '192.168.11.0/24'
+5. Create 2nd subnet
+
+![image](https://user-images.githubusercontent.com/123274310/213934303-f5991f91-a26c-4260-a1fb-18c77e309b1a.png)
 
 **Creation of On-premises Route Tables**
 
+1. From `VPC` service, go to `Route tables` and select `Create route table`
+2. Set `Name` as `ONPREM-PRIVATE-RT1` and `VPC` as `ONPREM`
+3. Create route table and move to creating the 2nd route table
+4. Set `Name` as `ONPREM-PRIVATE-RT2` and `VPC` as `ONPREM`
+5. Create route table and move to creating the last route table
+6. Set `Name` as `ONPREM-PUBLIC-RT` and `VPC` as `ONPREM`
+7. Create last route table
+
+![image](https://user-images.githubusercontent.com/123274310/213934550-f99d1187-4f29-41a0-8d3e-b4d8c58483c1.png)
+
+**Subnet Association for On-premises**
+
+1. From `VPC` service, go to `Route tables` and select `ONPREM-PRIVATE-RT1`
+2. Select `subnet associations` and add `ONPREM-PRIVATE-1`. Move to next route table
+3. From `ONPREM-PRIVATE-RT2`, select `subnet associations` and add `ONPREM-PRIVATE-2`. Move to last route table
+4. From `ONPREM-PUBLIC-RT`, select `subnet associations` and add `ONPREM-PUBLIC`.
+
+![image](https://user-images.githubusercontent.com/123274310/213938725-a898a4c6-0d4d-480b-aad8-7b441a983ffd.png)
+
+**Creating of On-premises Security Group**
+
+1. From `EC2` service, go to `Security Groups` and select `Create security group`
+2. Set `Security group name` to `ONPREMInstanceSG`, `Description` as `Default ONPREM SG`, `VPC` as `ONPREM`.
+3. Add inbound rule with `Type` as `All traffic` and `Source` as `10.16.0.0/16`
+4. Create Security Group
+5. Select `Edit inbound rules` and add self referencing rule with `Type` as `All traffic` and `Source` as `ONPREMInstanceSG`.
+6. Save Security group
+
+![image](https://user-images.githubusercontent.com/123274310/213939269-a9e71839-f3e9-4211-81b7-cb7c4af4fc46.png)
+
+**Creating On-premises Network Interfaces**
+
+1. From `EC2` service, go to `Network Interfaces` and select `Create network interface`
+2. Set `Description` as `Router1 PRIVATE INTERFACE`, `Subnet` as `ONPREM-PRIVATE-1`, `Security Groups` as `ONPREMInstanceSG` and `Name` as `ONPREM-R1-PRIVATE`. Disable source/destination check and move to next network interface.
+3. Set `Description` as `Router1 PUBLIC INTERFACE`, `Subnet` as `ONPREM-PUBLIC`, `Security Groups` as `ONPREMInstanceSG` and `Name` as `ONPREM-R1-PUBLIC`. Disable source/destination check and move to next network interface.
+4. Set `Description` as `Router2 PRIVATE INTERFACE`, `Subnet` as `ONPREM-PRIVATE-2`, `Security Groups` as `ONPREMInstanceSG` and `Name` as `ONPREM-R2-PRIVATE`. Disable source/destination check and move to next network interface.
+5. Set `Description` as `Router2 PUBLIC INTERFACE`, `Subnet` as `ONPREM-PUBLIC`, `Security Groups` as `ONPREMInstanceSG` and `Name` as `ONPREM-R2-PUBLIC`. Disable source/destination check and finish up.
+
+![image](https://user-images.githubusercontent.com/123274310/213940171-15fc6e7b-951e-415c-b968-76fb09c19812.png)
+
 **Setting up On-premises Routes**
 
-**Creation of On-premises Instances & Elastic IPs**
+1. From `VPC` service, go to `Route table` and edit routes in `ONPREM-PUBLIC-RT`
+2. Add route with `0.0.0.0/0` and set `Target` to `IGW-ONPREM`
+3. Now edit routes in `ONPREM-PRIVATE-RT1`, adding `10.16.0.0/16` and set `Target` as `ONPREM-R1-PRIVATE`
+4. Now edit routes in `ONPREM-PRIVATE-RT2`, adding `10.16.0.0/16` and set `Target` as `ONPREM-R2-PRIVATE`
+
+![image](https://user-images.githubusercontent.com/123274310/213940430-ab45c0cb-574f-447a-baab-2507edb358ca.png)
+
+![image](https://user-images.githubusercontent.com/123274310/213940441-ebe9d392-0fc1-4b05-b391-514c18401ba6.png)
+
+![image](https://user-images.githubusercontent.com/123274310/213940451-6b4cb7a5-8a5c-42f9-b77f-72392232c07a.png)
+
+**Creation of On-premises Elastic IPs and their Association**
 
 **Creation of On-premises IAM Role & Setting up IAM Instance Profile**
 
-**Creation of On-premises Security Group & VPC Endpoints**
+**Creation of On-premises VPC Endpoints**
+
+**Creation of On-premises EC2 Instances**
