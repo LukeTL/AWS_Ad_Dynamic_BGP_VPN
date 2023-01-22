@@ -33,7 +33,17 @@ Creation of AWS VPC
 
 Creation of AWS Private Subnet A & B
 
+1. From `VPC` service, go into `Subnets` and select `Create subnet`
+2. Set VPC ID as `A4L-AWS`, `Subnet name` as `sn-aws-private-A`, `Availability Zone` as `us-east-1a` and `IPv4 CIDR block` as `10.16.32.0/20`
+3. Create `sn-aws-private-A` and press `Create subnet` again for the second private subnet
+4. Set VPC ID as `A4L-AWS`, `Subnet name` as `sn-aws-private-B`, `Availability Zone` as `us-east-1b` and `IPv4 CIDR block` as `10.16.96.0/20`
+5. Create `sn-aws-private-B`
+
+![image](https://user-images.githubusercontent.com/123274310/213909174-2eb87980-deb0-4c9f-b20a-3de35c2cb9a0.png)
+
 Creation of AWS Custom Route Table
+
+
 
 Creation of AWS Transit Default Route
 
