@@ -19,7 +19,7 @@ The simulated On-premises environment consists of
 
 ## Setting up AWS Environment
 
-Creation of AWS VPC
+**Creation of AWS VPC**
 
 1. Go into the `VPC` service in the `AWS Managment Console`
 2. Find `Your VPCs` under `Virtual private cloud` and select `Create VPC`
@@ -31,7 +31,7 @@ Creation of AWS VPC
 
 ![image](https://user-images.githubusercontent.com/123274310/213908713-77b980e4-c3f8-4cd8-872b-daa01bdef4d9.png)
 
-Creation of AWS Private Subnet A & B
+**Creation of AWS Private Subnet A & B**
 
 1. From `VPC` service, go into `Subnets` and select `Create subnet`
 2. Set VPC ID as `A4L-AWS`, `Subnet name` as `sn-aws-private-A`, `Availability Zone` as `us-east-1a` and `IPv4 CIDR block` as `10.16.32.0/20`
@@ -41,40 +41,40 @@ Creation of AWS Private Subnet A & B
 
 ![image](https://user-images.githubusercontent.com/123274310/213909174-2eb87980-deb0-4c9f-b20a-3de35c2cb9a0.png)
 
-Creation of AWS Custom Route Table
+**Creation of AWS Custom Route Table**
 
 
 
-Creation of AWS Transit Default Route
+**Creation of AWS Transit Default Route**
 
-Association of AWS Private Subnets into AWS Route Table
+**Association of AWS Private Subnets into AWS Route Table**
 
-Creation of AWS Instance Secruity Group
+**Creation of AWS Instance Secruity Group**
 
-Creation of AWS EC2 Resource Instances
+**Creation of AWS EC2 Resource Instances**
 
-Creation of AWS EC2 Role & Setting up IAM Instance Profile
+**Creation of AWS EC2 Role & Setting up IAM Instance Profile**
 
-Setting AWS VPC Endpoints
+**Setting AWS VPC Endpoints**
 
-Creation of AWS Transit Gateway & Attachment
+**Creation of AWS Transit Gateway & Attachment**
 
 ## Setting up On-premises Environment
 
-Creation of On-premises VPC
+**Creation of On-premises VPC**
 
-Creation of On-premises Internet Gateway & Attachment
+**Creation of On-premises Internet Gateway & Attachment**
 
-Creation of On-premises Public Subnet
+**Creation of On-premises Public Subnet**
 
-Creation of On-premises Private Subnet 1 & 2
+**Creation of On-premises Private Subnet 1 & 2**
 
-Creation of On-premises Route Tables
+**Creation of On-premises Route Tables**
 
-Setting up On-premises Routes
+**Setting up On-premises Routes**
 
-Creation of On-premises Instances & Elastic IPs
+**Creation of On-premises Instances & Elastic IPs**
 
-Creation of On-premises IAM Role & Setting up IAM Instance Profile
+**Creation of On-premises IAM Role & Setting up IAM Instance Profile**
 
-Creation of On-premises Security Group & VPC Endpoints
+**Creation of On-premises Security Group & VPC Endpoints**
