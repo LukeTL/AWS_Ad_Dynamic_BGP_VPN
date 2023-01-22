@@ -156,10 +156,36 @@ The simulated On-premises environment consists of
     ]
 }
 ```
+4. Move to next section and name policy `root`
+5. Save policy and move back to IAM role menu. Append new policy to role.
+6. Name role `AWSEC2Role`
+
+![image](https://user-images.githubusercontent.com/123274310/213919907-01f3bc5c-b255-4c04-b6a1-72284fa8932c.png)
 
 **Setting AWS VPC Endpoints**
 
+1. From `VPC` service, go into `Endpoints` and select `Create endpoint`
+2. Set `Name Tag` as `AWSssmec2messagesinterfaceendpoint`, `Service Category` as `AWS Services`, `Services` as `com.amazonaws.us-east-1.ec2messages`, `VPC` as `A4L-AWS`, `Subnets` as `sn-aws-private-A` and `sn-aws-private-B` and `Security group` as `AWSInstanceSG`.
+3. Create Endpoint and do the 2nd one
+4. Set `Name Tag` as `AWSssminterfaceendpoint`, `Service Category` as `AWS Services`, `Services` as `com.amazonaws.us-east-1.ssm`, `VPC` as `A4L-AWS`, `Subnets` as `sn-aws-private-A` and `sn-aws-private-B` and `Security group` as `AWSInstanceSG`.
+5. Create Endpoint and do the last one
+6. Set `Name Tag` as `AWSssmmessagesinterfaceendpoint`, `Service Category` as `AWS Services`, `Services` as `com.amazonaws.us-east-1.ssmmessages`, `VPC` as `A4L-AWS`, `Subnets` as `sn-aws-private-A` and `sn-aws-private-B` and `Security group` as `AWSInstanceSG`.
+7. Create last endpoint
+
+![image](https://user-images.githubusercontent.com/123274310/213921434-9b06746d-31b4-42fe-8027-1352867c4efb.png)
+
 **Creation of AWS EC2 Resource Instances**
+
+1. From `EC2` service, go to `Instances` and select `Launch Instance`
+2. Set `Name` as `AWS-EC2-A`, `AMI` as `Amazon Linux`, `Instance type` as `t2.micro`, `VPC` as `A4L-AWS`, `Subnet` as `sn-aws-private-A`, `Firewall` as `AWSInstanceSG` and `IAM instance profile` as `AWSEC2Role
+3. Create instance and move on to the 2nd instance
+4. Set `Name` as `AWS-EC2-B`, `AMI` as `Amazon Linux`, `Instance type` as `t2.micro`, `VPC` as `A4L-AWS`, `Subnet` as `sn-aws-private-B`, `Firewall` as `AWSInstanceSG` and `IAM instance profile` as `AWSEC2Role
+5. Create Instance
+
+![image](https://user-images.githubusercontent.com/123274310/213922481-00792db0-ac55-4ff9-b198-907a7c940a68.png)
+
+**Summary of AWS environment setup**
+
 
 ## Setting up On-premises Environment
 
