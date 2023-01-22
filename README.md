@@ -22,6 +22,13 @@ The simulated On-premises environment consists of
 Creation of AWS VPC
 
 1. Go into the `VPC` service in the `AWS Managment Console`
+2. Find `Your VPCs` under `Virtual private cloud` and select `Create VPC`
+3. Set `Name tag` as `A4L-AWS`
+4. Set `IPv4 CIDR` as `10.16.0.0/16`
+5. Press `Create VPC`
+6. From `A4L-AWS`, toggle `Action` and select `Edit VPC Settings`
+7. Enable `DNS hostnames` and press `Save`
+![image](https://user-images.githubusercontent.com/123274310/213908713-77b980e4-c3f8-4cd8-872b-daa01bdef4d9.png)
 
 Creation of AWS Private Subnet A & B
 
