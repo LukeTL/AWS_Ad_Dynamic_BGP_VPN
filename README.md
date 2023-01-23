@@ -17,7 +17,7 @@ The simulated On-premises environment consists of
 - 4 EC2 Instances
 - The public subnet has 2 Ubuntu + strongSwan + FRRouting endpoints
 
-## Setting up AWS Environment
+<details><summary>## Setting up AWS Environment</summary>
 
 **Creation of AWS VPC**
 
@@ -182,7 +182,7 @@ The simulated On-premises environment consists of
 4. Set `Name` as `AWS-EC2-B`, `AMI` as `Amazon Linux`, `Instance type` as `t2.micro`, `VPC` as `A4L-AWS`, `Subnet` as `sn-aws-private-B`, `Firewall` as `AWSInstanceSG` and `IAM instance profile` as `AWSEC2Role
 5. Create Instance
 
-![image](https://user-images.githubusercontent.com/123274310/213922481-00792db0-ac55-4ff9-b198-907a7c940a68.png)
+![image](https://user-images.githubusercontent.com/123274310/213922481-00792db0-ac55-4ff9-b198-907a7c940a68.png) </details>
 
 **Summary of AWS environment setup**
 
