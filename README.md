@@ -364,4 +364,340 @@ netplan --debug apply
 
 ## Starting Project! Setting up 2 VPN Connections linking AWS VPC & On-premises VPC via Transit Gateway
 
+**Step 1: Creating Customer Gateways**
 
+1. From `VPC` service, got to `Customer gateways` and select `Create customer gateway`
+2. Set `Name` as `ONPREM-ROUTER1`, `BGP ASN` as `65016`, `IP address` as the public IP of Router 1. Create customer gateway
+3. Repeat step 2 but for router 2
+
+![image](https://user-images.githubusercontent.com/123274310/214053884-c0aaf4f2-693d-4bd1-9a4a-23a8e3d2bc09.png)
+
+**Step 2: Confirming No Connectivity Between AWS VPC & On-premises VPC**
+
+1. Connect to `ONPREM-SERVER2` and ping to the IP address of `AWS-EC2-B`
+2. You are able to observe no response from AWS server B after 20secs. This is because the 2 VPC are not connected yet.
+
+![image](https://user-images.githubusercontent.com/123274310/214056321-9edde793-773d-403a-9bdb-5e0f1c6b08f8.png)
+
+**Step 3: Create VPN Attachments for Transit Gateway**
+
+1. From `VPC` service, go to `Transit gateways attachments` and select `Create transit gateway attachment`
+2. Set `Transit gateway ID` as `A4LTGW`, `Attachment type` as `VPN`, `Customer Gateway ID` as `ONPREM-ROUTER1`, `Routing options` as `Dynamic (requires BGP)` and click `Enable Acceleration`. Create attachment and repeat this step for `ONPREM-ROUTER2`
+
+![image](https://user-images.githubusercontent.com/123274310/214063687-0d0904f2-79cb-4bf5-a342-5aa8bb199bc9.png)
+
+**Step 4: Download Configuration Files and Record Values**
+
+1. From `VPC` service, go to `Site-to-Site VPN connections` and download the configuration files
+2. Ensure configuration download settings are set as follows: `Vender` as `Generic`. Do not mix up the configuraton files.
+
+![image](https://user-images.githubusercontent.com/123274310/214065087-2e8871d8-d6dd-433b-b1bb-1af9216887bc.png)
+
+![image](https://user-images.githubusercontent.com/123274310/214065197-a1277240-ab9b-4383-ab36-1671b76713e2.png)
+
+3. Save values according to this format to use for later reference
+
+```
+# SHARED VALUES
+
+ROUTER1_PRIVATE_IP                  = 	
+ROUTER2_PRIVATE_IP                  =  
+ONPREM BGP ASN                      = 65016  
+AWS BGP ASN                         = 64512  
+
+# CONNECTION1 - AWS => ON PREM ROUTER1
+
+CONN1_TUNNEL1_PresharedKey          =  
+CONN1_TUNNEL1_ONPREM_OUTSIDE_IP     =  
+CONN1_TUNNEL1_AWS_OUTSIDE_IP        =  
+CONN1_TUNNEL1_ONPREM_INSIDE_IP      =  
+CONN1_TUNNEL1_AWS_INSIDE_IP         =  
+CONN1_TUNNEL1_AWS_BGP_IP            =  
+
+CONN1_TUNNEL2_PresharedKey          =  
+CONN1_TUNNEL2_ONPREM_OUTSIDE_IP     =  
+CONN1_TUNNEL2_AWS_OUTSIDE_IP        =  
+CONN1_TUNNEL2_ONPREM_INSIDE_IP      =  
+CONN1_TUNNEL2_AWS_INSIDE_IP         =  
+CONN1_TUNNEL2_AWS_BGP_IP            =  
+
+
+# CONNECTION2 - AWS => ON PREM ROUTER2
+
+CONN2_TUNNEL1_PresharedKey          =  
+CONN2_TUNNEL1_ONPREM_OUTSIDE_IP     =  
+CONN2_TUNNEL1_AWS_OUTSIDE_IP        =  
+CONN2_TUNNEL1_ONPREM_INSIDE_IP      =  
+CONN2_TUNNEL1_AWS_INSIDE_IP         =  
+CONN2_TUNNEL1_AWS_BGP_IP            =  
+
+CONN2_TUNNEL2_PresharedKey          =  
+CONN2_TUNNEL2_ONPREM_OUTSIDE_IP     =  
+CONN2_TUNNEL2_AWS_OUTSIDE_IP        =  
+CONN2_TUNNEL2_ONPREM_INSIDE_IP      =  
+CONN2_TUNNEL2_AWS_INSIDE_IP         =  
+CONN2_TUNNEL2_AWS_BGP_IP            =  
+```
+
+My values are recorded down as such:
+
+```
+# SHARED VALUES
+
+ROUTER1_PRIVATE_IP                  = 192.168.12.154
+ROUTER2_PRIVATE_IP                  = 192.168.12.166
+ONPREM BGP ASN                      = 65016  
+AWS BGP ASN                         = 64512  
+
+# CONNECTION1 - AWS => ON PREM ROUTER1
+
+CONN1_TUNNEL1_PresharedKey          =  ro7FhopaQkVpFhjTeTDt29_W_hvV0pX3
+CONN1_TUNNEL1_ONPREM_OUTSIDE_IP     =  107.20.42.64
+CONN1_TUNNEL1_AWS_OUTSIDE_IP        =  3.33.134.46
+CONN1_TUNNEL1_ONPREM_INSIDE_IP      =  169.254.248.114/30
+CONN1_TUNNEL1_AWS_INSIDE_IP         =  169.254.248.113/30
+CONN1_TUNNEL1_AWS_BGP_IP            =  169.254.248.113
+
+CONN1_TUNNEL2_PresharedKey          =  imL2fpADTW6xwJU32ZKvTwkCCriUOaVd
+CONN1_TUNNEL2_ONPREM_OUTSIDE_IP     =  107.20.42.64
+CONN1_TUNNEL2_AWS_OUTSIDE_IP        =  13.248.187.125
+CONN1_TUNNEL2_ONPREM_INSIDE_IP      =  169.254.168.2/30
+CONN1_TUNNEL2_AWS_INSIDE_IP         =  169.254.168.1/30
+CONN1_TUNNEL2_AWS_BGP_IP            =  169.254.168.1
+
+
+# CONNECTION2 - AWS => ON PREM ROUTER2
+
+CONN2_TUNNEL1_PresharedKey          =  I5UTTLFD.42Ez1nbEEhZl5nDN0emTYt4
+CONN2_TUNNEL1_ONPREM_OUTSIDE_IP     =  3.223.123.10
+CONN2_TUNNEL1_AWS_OUTSIDE_IP        =  15.197.205.245
+CONN2_TUNNEL1_ONPREM_INSIDE_IP      =  169.254.155.118/30
+CONN2_TUNNEL1_AWS_INSIDE_IP         =  169.254.155.117/30
+CONN2_TUNNEL1_AWS_BGP_IP            =  169.254.155.117
+
+CONN2_TUNNEL2_PresharedKey          =  ED06jsaWMpvQeknj4kGrikVmTawxuFiY
+CONN2_TUNNEL2_ONPREM_OUTSIDE_IP     =  3.223.123.10
+CONN2_TUNNEL2_AWS_OUTSIDE_IP        =  99.83.182.130
+CONN2_TUNNEL2_ONPREM_INSIDE_IP      =  169.254.70.186/30
+CONN2_TUNNEL2_AWS_INSIDE_IP         =  169.254.70.185/30
+CONN2_TUNNEL2_AWS_BGP_IP            =  169.254.70.185
+```
+
+**Step 5: Configurating IPsec Tunnels for On-premises Router 1**
+
+1. Connect to `ONPREM-Router` via session manager
+2. Type the following commands
+```
+sudo bash
+cd /home/ubuntu/demo_assets
+nano ipsec.conf
+```
+3. Edit `ipsec.conf` file in the instance to this format with reference to the stored values above:
+```
+#
+# /etc/ipsec.conf
+#
+conn %default
+         # Authentication Method : Pre-Shared Key
+         leftauth=psk
+         rightauth=psk
+         # Encryption Algorithm : aes-128-cbc
+         # Authentication Algorithm : sha1
+         # Perfect Forward Secrecy : Diffie-Hellman Group 2
+         ike=aes128-sha1-modp1024!
+         # Lifetime : 28800 seconds
+         ikelifetime=28800s
+         # Phase 1 Negotiation Mode : main
+         aggressive=no
+         # Protocol : esp
+         # Encryption Algorithm : aes-128-cbc
+         # Authentication Algorithm : hmac-sha1-96
+         # Perfect Forward Secrecy : Diffie-Hellman Group 2
+         esp=aes128-sha1-modp1024!
+         # Lifetime : 3600 seconds
+         lifetime=3600s
+         # Mode : tunnel
+         type=tunnel
+         # DPD Interval : 10
+         dpddelay=10s
+         # DPD Retries : 3
+         dpdtimeout=30s
+         # Tuning Parameters for AWS Virtual Private Gateway:
+         keyexchange=ikev1
+         rekey=yes
+         reauth=no
+         dpdaction=restart
+         closeaction=restart
+         leftsubnet=0.0.0.0/0,::/0
+         rightsubnet=0.0.0.0/0,::/0
+         leftupdown=/etc/ipsec-vti.sh
+         installpolicy=yes
+         compress=no
+         mobike=no
+conn AWS-VPC-GW1
+         # Customer Gateway: :
+         left=ROUTER1_PRIVATE_IP
+         leftid=CONN1_TUNNEL1_ONPREM_OUTSIDE_IP
+         # Virtual Private Gateway :
+         right=CONN1_TUNNEL1_AWS_OUTSIDE_IP
+         rightid=CONN1_TUNNEL1_AWS_OUTSIDE_IP
+         auto=start
+         mark=100
+         #reqid=1
+conn AWS-VPC-GW2
+         # Customer Gateway: :
+         left=ROUTER1_PRIVATE_IP
+         leftid=CONN1_TUNNEL2_ONPREM_OUTSIDE_IP
+         # Virtual Private Gateway :
+         right=CONN1_TUNNEL2_AWS_OUTSIDE_IP
+         rightid=CONN1_TUNNEL2_AWS_OUTSIDE_IP
+         auto=start
+         mark=200
+```
+4. Type `nano ipsec.secrets` and edit file in this format:
+```
+#
+# /etc/ipsec.secrets
+#
+
+# This file holds shared secrets or RSA private keys for authentication.
+
+# RSA private key for this host, authenticating it to any other host
+# which knows the public part.
+CONN1_TUNNEL1_ONPREM_OUTSIDE_IP CONN1_TUNNEL1_AWS_OUTSIDE_IP : PSK "CONN1_TUNNEL1_PresharedKey"
+CONN1_TUNNEL2_ONPREM_OUTSIDE_IP CONN1_TUNNEL2_AWS_OUTSIDE_IP : PSK "CONN1_TUNNEL2_PresharedKey"
+```
+5. Type `nano ipsec-vti.sh` and edit file in this format:
+```
+#!/bin/bash
+
+#
+# /etc/ipsec-vti.sh
+#
+
+IP=$(which ip)
+IPTABLES=$(which iptables)
+
+PLUTO_MARK_OUT_ARR=(${PLUTO_MARK_OUT//// })
+PLUTO_MARK_IN_ARR=(${PLUTO_MARK_IN//// })
+case "$PLUTO_CONNECTION" in
+AWS-VPC-GW1)
+VTI_INTERFACE=vti1
+VTI_LOCALADDR=CONN1_TUNNEL1_ONPREM_INSIDE_IP
+VTI_REMOTEADDR=CONN1_TUNNEL1_AWS_INSIDE_IP
+;;
+AWS-VPC-GW2)
+VTI_INTERFACE=vti2
+VTI_LOCALADDR=CONN1_TUNNEL2_ONPREM_INSIDE_IP
+VTI_REMOTEADDR=CONN1_TUNNEL2_AWS_INSIDE_IP
+;;
+esac
+
+case "${PLUTO_VERB}" in
+up-client)
+#$IP tunnel add ${VTI_INTERFACE} mode vti local ${PLUTO_ME} remote ${PLUTO_PEER} okey ${PLUTO_MARK_OUT_ARR[0]} ikey ${PLUTO_MARK_IN_ARR[0]}
+$IP link add ${VTI_INTERFACE} type vti local ${PLUTO_ME} remote ${PLUTO_PEER} okey ${PLUTO_MARK_OUT_ARR[0]} ikey ${PLUTO_MARK_IN_ARR[0]}
+sysctl -w net.ipv4.conf.${VTI_INTERFACE}.disable_policy=1
+sysctl -w net.ipv4.conf.${VTI_INTERFACE}.rp_filter=2 || sysctl -w net.ipv4.conf.${VTI_INTERFACE}.rp_filter=0
+$IP addr add ${VTI_LOCALADDR} remote ${VTI_REMOTEADDR} dev ${VTI_INTERFACE}
+$IP link set ${VTI_INTERFACE} up mtu 1436
+$IPTABLES -t mangle -I FORWARD -o ${VTI_INTERFACE} -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+$IPTABLES -t mangle -I INPUT -p esp -s ${PLUTO_PEER} -d ${PLUTO_ME} -j MARK --set-xmark ${PLUTO_MARK_IN}
+$IP route flush table 220
+#/etc/init.d/bgpd reload || /etc/init.d/quagga force-reload bgpd
+;;
+down-client)
+#$IP tunnel del ${VTI_INTERFACE}
+$IP link del ${VTI_INTERFACE}
+$IPTABLES -t mangle -D FORWARD -o ${VTI_INTERFACE} -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+$IPTABLES -t mangle -D INPUT -p esp -s ${PLUTO_PEER} -d ${PLUTO_ME} -j MARK --set-xmark ${PLUTO_MARK_IN}
+;;
+esac
+
+# Enable IPv4 forwarding
+sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv4.conf.ens5.disable_xfrm=1
+sysctl -w net.ipv4.conf.ens5.disable_policy=1
+```
+6. Enter `cp ipsec* /etc` to copy ipsec files and enter `chmod +x /etc/ipsec-vti.sh` to make `ipsec-vti.sh` executable
+7. Enter `systemctl restart strongswan` to restart strongswan and enter `ifconfig` to see the running tunnels (vti1 and vti2)
+
+![image](https://user-images.githubusercontent.com/123274310/214121657-f4396da8-e1da-41c1-88fb-082c77039ae5.png)
+![image](https://user-images.githubusercontent.com/123274310/214124171-7343ad77-68f2-467f-a83a-be71345a6667.png)
+
+**Step 6: Configurating IPsec Tunnels for On-premises Router 2**
+1. Modify and repeat the steps in the router 1 configuration for router 2.
+
+![image](https://user-images.githubusercontent.com/123274310/214123837-924be3ab-0e3c-4c54-9a31-8be5536788db.png)
+![image](https://user-images.githubusercontent.com/123274310/214124464-e6dd6856-b21e-4b1a-86a4-9b13c72be758.png)
+
+**Step 7: Install Frrouting on Router 1 (Enable BGP)**
+
+1. Connect to `ONPREM-ROUTER1`
+2. Run this code to install Frrouting and wait 10mins:
+```
+sudo bash
+cd /home/ubuntu/demo_assets
+chmod +x ffrouting-install.sh
+./ffrouting-install.sh
+```
+3. While waiting, install on `ONPREM-ROUTER2`
+
+**Step 7: Install Frrouting on Router 2 (Enable BGP)**
+
+1. Connect to `ONPREM-ROUTER2`
+2. Run this code to install Frrouting and wait 10mins:
+```
+sudo bash
+cd /home/ubuntu/demo_assets
+chmod +x ffrouting-install.sh
+./ffrouting-install.sh
+```
+3. After both instances have finished installing, move to next step.
+
+**Step 8: Configure BGP Routing for Router 1 & 2**
+
+1. From `ONPREM-ROUTER1`, run these codes to config BGP routing:
+```
+vtysh
+conf t
+frr defaults traditional
+router bgp 65016
+neighbor CONN1_TUNNEL1_AWS_BGP_IP remote-as 64512
+neighbor CONN1_TUNNEL2_AWS_BGP_IP remote-as 64512
+no bgp ebgp-requires-policy
+address-family ipv4 unicast
+redistribute connected
+exit-address-family
+exit
+exit
+wr
+exit
+sudo reboot
+```
+
+2. From `ONPREM-ROUTER2`, run these codes to config BGP routing
+```
+vtysh
+conf t
+frr defaults traditional
+router bgp 65016
+neighbor CONN2_TUNNEL1_AWS_BGP_IP remote-as 64512
+neighbor CONN2_TUNNEL2_AWS_BGP_IP remote-as 64512
+no bgp ebgp-requires-policy
+address-family ipv4 unicast
+redistribute connected
+exit-address-family
+exit
+exit
+wr
+exit
+sudo reboot
+```
+
+**Step 9: Test BGP Routes for Router 1 & 2**
+
+1. BGP is up (The image below has different addresses due to a reconstruction but the steps above indeed work)
+![image](https://user-images.githubusercontent.com/123274310/214130523-e062a117-e414-4b1d-b4d1-1ce3618a499e.png)
+2. AWS VPC is able to Ping to On-premises VPC and Vice Versa through the 2 BGP-based VPN connections by strongSwan and FRRouting.
+3. Therefore, I have come to the end of the project. Thank you!
