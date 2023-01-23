@@ -17,7 +17,7 @@ The simulated On-premises environment consists of
 - 4 EC2 Instances
 - The public subnet has 2 Ubuntu + strongSwan + FRRouting endpoints
 
-<details><summary><h2>Setting up AWS Environment (Untoggle to view documentation)</h2></summary>
+<details><summary><h2>Setting up AWS Environment (Untoggle for Documentation)</h2></summary>
 
 **Creation of AWS VPC**
 
@@ -196,7 +196,7 @@ The simulated On-premises environment consists of
 8. 3 VPC Endpoints were then setup. The ssm endpoint is the endpoint for the System Manager Service, the ec2messages endpoint is used by Systems Manager to make calls from the SSM Agent to the Systems Manager service and the ssmmessages endpoint is required for connecting to the AWS instances through a secure data channel using Session Manager.
 9. Finally 2 EC2 Instances were created in the AWS VPC to simulate AWS resources. `AWS-EC2-A` ran in subnet `sn-aws-private-A` while `AWS-EC2-B` ran in subnet `sn-aws-private`.
 
-## Setting up On-premises Environment
+<details><summary><h2>Setting up On-premises Environment (Untoggle for Documentation)</h2></summary>
 
 **Creation of On-premises VPC**
 
@@ -358,7 +358,7 @@ netplan --debug apply
 4. Set `Name` as `ONPREM-SERVER1`, `AMI` to `Amazon Linux` with `t2.micro`, `Keypair` to `None`, `VPC` as `ONPREM`, `Subnet` as `ONPREM-PRIVATE-1`, `Security groups` as `ONPREMInstanceSG` and `Instance profile` as `ONPREMEC2Role`. Create and move to last instance
 5. Set `Name` as `ONPREM-SERVER2`, `AMI` to `Amazon Linux` with `t2.micro`, `Keypair` to `None`, `VPC` as `ONPREM`, `Subnet` as `ONPREM-PRIVATE-2`, `Security groups` as `ONPREMInstanceSG` and `Instance profile` as `ONPREMEC2Role`.
 
-![image](https://user-images.githubusercontent.com/123274310/214038500-3a3938f8-1e84-4907-8049-98d612d33f65.png)
+![image](https://user-images.githubusercontent.com/123274310/214038500-3a3938f8-1e84-4907-8049-98d612d33f65.png) </details>
 
 **Summary of On-premises environment setup**
 
