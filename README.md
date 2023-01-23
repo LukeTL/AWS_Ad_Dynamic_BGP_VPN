@@ -292,8 +292,76 @@ The simulated On-premises environment consists of
 
 **Creation of On-premises Elastic IPs and their Association**
 
+1. From `EC2` service, go to `Elastic IPs` and select `Allocate Elastic IP address`
+2. Allocate Elastic IP
+3. Toggle `Actions` and press `Associate Elastic IP address`
+4. Select `Network Interface` and choose `ONPREM-R1-PUBLIC`
+5. Repeat steps 2 to 4 for the 2nd elastic IP but select `ONPREM-R2-PUBLIC` instead
+
+![image](https://user-images.githubusercontent.com/123274310/214002604-2b91b850-65a7-43e7-9d49-ece6b8cc713a.png)
+
 **Creation of On-premises IAM Role & Setting up IAM Instance Profile**
+
+1. From `IAM` service, go to `Roles` and select `Create role`
+2. Choose `AWS Service` and select the `EC2` service
+3. Select `root` policy and append it
+6. Name role `ONPREMEC2Role`
+
+![image](https://user-images.githubusercontent.com/123274310/214003291-e6614579-2c16-4735-9ec2-ed4339eff1ce.png)
 
 **Creation of On-premises VPC Endpoints**
 
+1. From `VPC` service, go to `endpoints` and select `Create endpoint`
+2. Set `Name tag` as `ONPREMssmVPCe`, `Service category` as `AWS services`, `Services` as `com.amazonaws.us-east-1.ssm`, `VPC` as `ONPREM`, `Subnets` as `ONPREM-PUBLIC` and `Security groups` as `ONPREMInstanceSG`. Move to next endpoint
+3. Set `Name tag` as `ONPREMssmec2messagesVPCe`, `Service category` as `AWS services`, `Services` as `com.amazonaws.us-east-1.ec2messages`, `VPC` as `ONPREM`, `Subnets` as `ONPREM-PUBLIC` and `Security groups` as `ONPREMInstanceSG`. Move to next endpoint
+4. Set `Name tag` as `ONPREMssmmessagesVPCe`, `Service category` as `AWS services`, `Services` as `com.amazonaws.us-east-1.ssmmessages`, `VPC` as `ONPREM`, `Subnets` as `ONPREM-PUBLIC` and `Security groups` as `ONPREMInstanceSG`. Move to last endpoint
+5. Set `Name tag` as `ONPREMs3VPCe`, `Services` as `com.amazonaws.us-east-1.s3 (Gateway)`, `VPC` as `ONPREM`, `Route tables` as `ONPREM-PRIVATE-RT1`, `ONPREM-PRIVATE-RT2` and `ONPREM-PUBLIC-RT`.
+
+![image](https://user-images.githubusercontent.com/123274310/214021999-52eee18d-c67b-4648-95f9-3b409b7b7975.png)
+
 **Creation of On-premises EC2 Instances**
+
+1. From 'EC2', go to `Instances` and select `Launch instance`
+2. Set `Name` as `ONPREM-ROUTER1`, `AMI` to `ami-0ac80df6eff0e70b5` with `t3.small`, `Keypair` to `None`, `VPC` as `ONPREM`, `Subnet` as `ONPREM-PUBLIC`, `Network interface` as `ONPREM-R1-PUBLIC` & `ONPREM-R1-PRIVATE`, `Instance profile` as `ONPREMEC2Role` and add metadata as listed. Create Instance and move to the next one.
+
+```
+#!/bin/bash -xe
+apt-get update && apt-get install -y strongswan wget
+mkdir /home/ubuntu/demo_assets
+cd /home/ubuntu/demo_assets
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter1/ipsec-vti.sh
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter1/ipsec.conf
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter1/ipsec.secrets
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter1/51-eth1.yaml
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter1/ffrouting-install.sh
+chown ubuntu:ubuntu /home/ubuntu/demo_assets -R
+cp /home/ubuntu/demo_assets/51-eth1.yaml /etc/netplan
+netplan --debug apply
+```
+
+3. Set `Name` as `ONPREM-ROUTER2`, `AMI` to `ami-0ac80df6eff0e70b5` with `t3.small`, `Keypair` to `None`, `VPC` as `ONPREM`, `Subnet` as `ONPREM-PUBLIC`, `Network interface` as `ONPREM-R2-PUBLIC` & `ONPREM-R2-PRIVATE`, `Instance profile` as `ONPREMEC2Role` and add metadata as listed. Create Instance and move to the next one.
+
+```
+#!/bin/bash -xe
+apt-get update && apt-get install -y strongswan wget
+mkdir /home/ubuntu/demo_assets
+cd /home/ubuntu/demo_assets
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter2/ipsec-vti.sh
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter2/ipsec.conf
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter2/ipsec.secrets
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter2/51-eth1.yaml
+wget https://raw.githubusercontent.com/acantril/learn-cantrill-io-labs/master/aws-hybrid-bgpvpn/OnPremRouter2/ffrouting-install.sh
+chown ubuntu:ubuntu /home/ubuntu/demo_assets -R
+cp /home/ubuntu/demo_assets/51-eth1.yaml /etc/netplan
+netplan --debug apply
+```
+4. Set `Name` as `ONPREM-SERVER1`, `AMI` to `Amazon Linux` with `t2.micro`, `Keypair` to `None`, `VPC` as `ONPREM`, `Subnet` as `ONPREM-PRIVATE-1`, `Security groups` as `ONPREMInstanceSG` and `Instance profile` as `ONPREMEC2Role`. Create and move to last instance
+5. Set `Name` as `ONPREM-SERVER2`, `AMI` to `Amazon Linux` with `t2.micro`, `Keypair` to `None`, `VPC` as `ONPREM`, `Subnet` as `ONPREM-PRIVATE-2`, `Security groups` as `ONPREMInstanceSG` and `Instance profile` as `ONPREMEC2Role`.
+
+![image](https://user-images.githubusercontent.com/123274310/214038500-3a3938f8-1e84-4907-8049-98d612d33f65.png)
+
+**Summary of On-premises environment setup**
+
+## Starting Project! Setting up 2 VPN Connections linking AWS VPC & On-premises VPC via Transit Gateway
+
+
