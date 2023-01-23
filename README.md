@@ -17,7 +17,7 @@ The simulated On-premises environment consists of
 - 4 EC2 Instances
 - The public subnet has 2 Ubuntu + strongSwan + FRRouting endpoints
 
-<details><summary>## Setting up AWS Environment</summary>
+<details><summary><h2>## Setting up AWS Environment</h2></summary>
 
 **Creation of AWS VPC**
 
