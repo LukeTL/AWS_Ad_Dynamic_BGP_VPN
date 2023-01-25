@@ -700,7 +700,9 @@ sudo reboot
 **Step 9: Test BGP Routes for Router 1 & 2**
 
 1. BGP is up (The image below has different addresses due to a reconstruction but the steps above indeed work)
+
 ![image](https://user-images.githubusercontent.com/123274310/214130523-e062a117-e414-4b1d-b4d1-1ce3618a499e.png)
+
 2. AWS VPC is able to Ping to On-premises VPC and Vice Versa through the 2 BGP-based VPN connections by strongSwan and FRRouting.
 3. Therefore, I have come to the end of the project. Thank you!
 
