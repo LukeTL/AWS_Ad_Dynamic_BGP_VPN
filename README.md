@@ -362,6 +362,8 @@ netplan --debug apply
 
 **Summary of On-premises environment setup**
 
+Placeholder. Will do summary at later date
+
 ## Starting Project! Setting up 2 VPN Connections linking AWS VPC & On-premises VPC via Transit Gateway
 
 **Step 1: Creating Customer Gateways**
@@ -703,3 +705,5 @@ sudo reboot
 3. Therefore, I have come to the end of the project. Thank you!
 
 ## Main Takeaways and Learning Points
+
+Placeholder. Will do this section later
