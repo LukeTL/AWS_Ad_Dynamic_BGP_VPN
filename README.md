@@ -1,6 +1,8 @@
 # AWS - Advanced Dynamic, BGP Based, Highly-Available VPN (AWS & Simulated On-premises)
 
-This project is the implemetation of a Dynamic BGP Based, Highly-Available Site-To-Site VPN on a simulated Hybrid AWS and On-premise environment
+Insert Finished Architecture Here -> <-
+
+This project is the implemetation of a Dynamic BGP Based, Highly-Available Site-To-Site VPN on a simulated Hybrid AWS and On-premise environment (Insert Reference Later)
 
 The simulated AWS environment consists of
 
