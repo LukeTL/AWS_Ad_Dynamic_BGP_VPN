@@ -710,4 +710,5 @@ sudo reboot
 
 ## Main Takeaways and Learning Points
 
-Placeholder. Will do this section later
+1. Great exposure to Cloud-based network, utilising services and tools such as AWS Transit Gateway, AWS Global Accelarator, AWS VPC and AWS VPN.
+2. Obtained a better understanding of BGP and its usage in site-to-site VPNs and how to setup the service utilising strongSwan and FFRouting on Ubuntu.
